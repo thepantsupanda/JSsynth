@@ -12,21 +12,24 @@
     <button data-playing="false" role="switch" aria-checked="false">
         <span>Start/Stop</span>
     </button><br>
-    <input type="range" id="pitch" min="27.5" max="3520" value="440" step="0.1" />
+    <input type="range" id="pitch" min="11.562" max="5919.9" value="261.63" step="0.001" />
+    <input type="range" id="volume" min="0" max="2" value="1" step="0.01" />
 
     <!-- JS STUFF -->
     <script type="text/javascript">
 
         const audioContext = new AudioContext();
+        const gainNode = audioContext.createGain();
         let osc;
 
         const startButton = document.querySelector("button");
         const pitchControl = document.querySelector("#pitch");
+        const volumeControl = document.querySelector("#volume");
 
         function playOsc() {
             osc = audioContext.createOscillator();
             osc.frequency.value = pitchControl.value;
-            osc.connect(audioContext.destination);
+            osc.connect(gainNode).connect(audioContext.destination);
             osc.start();
         }
 
@@ -55,7 +58,13 @@
             osc.frequency.value = pitchControl.value;
             //console.log("Osc Pitch: " + osc.frequency + " / Control Val: " + pitchControl.value);
 
-        },false,);
+        }, false,);
+
+        volumeControl.addEventListener("input", () => {
+
+            gainNode.gain.value = volumeControl.value;
+
+        }, false,);
 
     </script>
 
