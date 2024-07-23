@@ -18,10 +18,22 @@
     <script type="text/javascript">
 
         const audioContext = new AudioContext();
-        const osc = new OscillatorNode(audioContext)
-        osc.connect(audioContext.destination);
+        let osc;
 
         const startButton = document.querySelector("button");
+        const pitchControl = document.querySelector("#pitch");
+
+        function playOsc() {
+            osc = audioContext.createOscillator();
+            osc.frequency.value = pitchControl.value;
+            osc.connect(audioContext.destination);
+            osc.start();
+        }
+
+        function stopOsc() {
+            osc.stop();
+        }
+
         startButton.addEventListener("click", () => {
 
             if (audioContext.state === "suspended") {
@@ -29,16 +41,15 @@
                 }
 
             if (startButton.dataset.playing === "false") {
-                osc.start();
+                playOsc();
                 startButton.dataset.playing = "true";
             } else if (startButton.dataset.playing === "true") {
-                osc.stop()
+                stopOsc();
                 startButton.dataset.playing = "false";
             }
 
         }, false);
-
-        const pitchControl = document.querySelector("#pitch");
+        
         pitchControl.addEventListener("input", () => {
 
             osc.frequency.value = pitchControl.value;
