@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Oscillator</title>
+    <style></style>
+
+</head>
+<body>
+
+    <!-- HTML STUFF -->
+    <button data-playing="false" role="switch" aria-checked="false">
+        <span>Start/Stop</span>
+    </button><br>
+    <input type="range" id="pitch" min="27.5" max="3520" value="440" step="0.1" />
+
+    <!-- JS STUFF -->
+    <script type="text/javascript">
+
+        const audioContext = new AudioContext();
+        const osc = new OscillatorNode(audioContext)
+        osc.connect(audioContext.destination);
+
+        const startButton = document.querySelector("button");
+        startButton.addEventListener("click", () => {
+
+            if (audioContext.state === "suspended") {
+                    audioContext.resume();
+                }
+
+            if (startButton.dataset.playing === "false") {
+                osc.start();
+                startButton.dataset.playing = "true";
+            } else if (startButton.dataset.playing === "true") {
+                osc.stop()
+                startButton.dataset.playing = "false";
+            }
+
+        }, false);
+
+        const pitchControl = document.querySelector("#pitch");
+        pitchControl.addEventListener("input", () => {
+
+            osc.frequency.value = pitchControl.value;
+            //console.log("Osc Pitch: " + osc.frequency + " / Control Val: " + pitchControl.value);
+
+        },false,);
+
+    </script>
+
+</body>
+</html>
